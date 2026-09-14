@@ -83,6 +83,18 @@ Then point the client at the built file instead of `npx`:
 
 or, for Claude Code: `claude mcp add dokutrak -e DOKUTRAK_API_KEY=dk_live_… -- node /path/to/dokutrak-mcp/dist/cli.js`.
 
+### The skill
+
+`skills/dokutrak/SKILL.md` teaches the agent the three everyday uses — ask a Client for
+documents, know where a request stands, chase on rejected files — and how to connect. It is
+what a DokuTrak user installs alongside the connector:
+
+```bash
+npx skills add Crackx17/dokutrak-mcp        # the open agent-skills installer
+# or by hand, for Claude Code / Claude Desktop:
+cp -r skills/dokutrak ~/.claude/skills/dokutrak
+```
+
 ## Configuration
 
 | Variable           | Required | Default                          | Meaning                                                    |
