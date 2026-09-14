@@ -8,7 +8,7 @@ import { DEFAULT_API_URL, readConfig } from '../src/config.js';
  * What the agent sees, and what it must never see. These tests read the tool
  * list through the MCP client, exactly as Claude Code does on connect.
  */
-const EXPECTED_TOOLS = ['get_request'];
+const EXPECTED_TOOLS = ['create_request', 'request_replacement', 'get_request', 'download_documents'];
 
 function sentences(text: string): string[] {
   return text

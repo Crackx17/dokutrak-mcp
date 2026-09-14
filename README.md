@@ -92,12 +92,39 @@ or, for Claude Code: `claude mcp add dokutrak -e DOKUTRAK_API_KEY=dk_live_… --
 
 ## Tools
 
+Four tools, one round trip: ask, chase, know, collect.
+
+### `create_request`
+
+Creates a Document Request **and** sends it, in one call, so nothing is left created but unsent.
+Takes the client's email, a deadline (`YYYY-MM-DD` or an ISO datetime), the checklist of
+documents wanted, and an optional title and message. The email goes to the recipient given here
+and to nobody else; the client uploads through the secure link it contains. Under the hood this
+is the same two-step the DokuTrak app performs: create with `sendEmail: false`, then send. If the
+send fails, the error names the created request, which stays visible in the dashboard.
+
+### `request_replacement`
+
+Chases the client on the rejected files of a request: flags them, moves the request back to
+awaiting the client, and returns it to the automatic reminder cadence. **This call sends no
+email by itself**; the reminders do. The optional message is recorded in the request's audit
+trail and is not sent to the client. It refuses a request with no rejected file.
+
 ### `get_request`
 
 Where a Document Request stands, in one call: status, the checklist, every collected file with
 its verdict (approved, rejected with the reviewer's reason, or pending), and the reminder state.
 Give a `request_id`, or a `search` term matching the title or the client's name or email. When
 several requests match, the tool returns the candidates and asks for the id.
+
+### `download_documents`
+
+Every collected file of a request, as one zip archive. The archive comes back **embedded in the
+tool result as binary content** (an MCP resource with a base64 blob and `application/zip`), not
+as a link: the API has no short-link endpoint for a zip, and the connector writes nothing to
+disk. What the agent does with the bytes is decided on the professional's side, exactly like a
+download from the browser. Large archives make large results; check with `get_request` that
+documents have arrived before calling it.
 
 ## What the connector cannot do
 
