@@ -1,0 +1,47 @@
+{
+  "name": "dokutrak-mcp",
+  "version": "0.1.0",
+  "description": "MCP connector for DokuTrak: let your agent chase the documents.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "dokutrak-mcp": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run build && npm test",
+    "prepublishOnly": "npm run check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Crackx17/dokutrak-mcp.git"
+  },
+  "homepage": "https://dokutrak.com",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "dokutrak",
+    "document-collection",
+    "claude"
+  ],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.0"
+  }
+}
