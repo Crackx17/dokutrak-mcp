@@ -1,5 +1,6 @@
 {
   "name": "dokutrak-mcp",
+  "mcpName": "io.github.Crackx17/dokutrak-mcp",
   "version": "0.1.0",
   "description": "MCP connector for DokuTrak: let your agent chase the documents.",
   "license": "MIT",
@@ -10,7 +11,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=20"
@@ -20,7 +22,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "npm run typecheck && npm run build && npm test",
-    "prepublishOnly": "npm run check"
+    "prepublishOnly": "npm run check",
+    "staging": "node scripts/staging-run.mjs"
   },
   "repository": {
     "type": "git",

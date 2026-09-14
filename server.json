@@ -1,0 +1,40 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Crackx17/dokutrak-mcp",
+  "title": "DokuTrak",
+  "description": "Let your agent chase the documents: create, chase, read and collect DokuTrak Document Requests.",
+  "repository": {
+    "url": "https://github.com/Crackx17/dokutrak-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://dokutrak.com",
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "dokutrak-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "DOKUTRAK_API_KEY",
+          "description": "The Agent Connection, issued from Settings → Connect an agent in the DokuTrak app.",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "DOKUTRAK_API_URL",
+          "description": "Base URL of the DokuTrak API, ending in /api. Defaults to https://app.dokutrak.com/api.",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

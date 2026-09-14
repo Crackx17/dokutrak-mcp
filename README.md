@@ -147,6 +147,30 @@ The tests are contract tests at the MCP seam: a real MCP client and the real ser
 in memory through the official SDK's transport, with HTTP stubbed at `fetch` using recorded
 responses. They call tools, never functions, and run with no DokuTrak account and no network.
 
+### The staging run
+
+Before a release, the built binary is driven once against a real workspace, by a real MCP
+client over stdio: create → chase → read → collect → revoke → 401. It is a record pasted into
+the release PR, never a CI check (a blocking check calls no third party). It pauses twice for
+acts the service refuses to any Agent Connection: rejecting the uploaded file, and revoking
+the key.
+
+```bash
+npm run build
+DOKUTRAK_API_KEY=dk_live_… STAGING_RECIPIENT_EMAIL=you@example.com npm run staging
+```
+
+A real Document Request is created and a real email goes to `STAGING_RECIPIENT_EMAIL`. The
+transcript lands in `staging-run-<timestamp>.md` (git-ignored); the key is never written to it.
+
+### Releasing
+
+A tag `vX.Y.Z` matching `package.json` and `SERVER_VERSION` triggers `.github/workflows/release.yml`:
+`npm run check`, `npm publish` (trusted publishing through GitHub's OIDC token, provenance
+attached), then the listing in the [MCP Registry](https://registry.modelcontextprotocol.io) as
+`io.github.Crackx17/dokutrak-mcp` — the `mcpName` of `package.json`, which the registry checks
+against the published tarball. Running the workflow by hand does a `--dry-run` and publishes nothing.
+
 ## License
 
 [MIT](LICENSE).

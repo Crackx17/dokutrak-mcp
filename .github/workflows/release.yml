@@ -1,0 +1,82 @@
+# Publishes dokutrak-mcp to npm, then lists it in the MCP Registry.
+#
+# Trigger: a tag `vX.Y.Z` that matches package.json (the guard below refuses
+# any other). `workflow_dispatch` runs the same steps with `npm publish
+# --dry-run`, which prints the tarball contents and publishes nothing.
+#
+# Authentication — two phases, one workflow:
+#   1. First release: `NPM_TOKEN` (granular, expires 2026-12-13) is passed as
+#      NODE_AUTH_TOKEN and npm uses it.
+#   2. Then trusted publishing is enabled on npmjs.com (package settings →
+#      Trusted Publisher → GitHub Actions, repo Crackx17/dokutrak-mcp, workflow
+#      `release.yml`, no environment) and the secret is deleted. With no token,
+#      npm ≥ 11.5.1 authenticates through the OIDC token `id-token: write`
+#      grants, and signs provenance on its own — no `--provenance` flag.
+# Nothing here changes between the two phases: the switch is on npmjs.com.
+#
+# The MCP Registry job needs the npm package to be visible with its `mcpName`,
+# hence the retry. It is not a required check anywhere and runs on no PR.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - name: npm ≥ 11.5.1 (trusted publishing needs it; Node 22 ships 10.x)
+        run: npm install -g npm@latest && npm --version
+      - name: the tag is the version, and the server reports the same one
+        if: github.event_name == 'push'
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg=$(node -p "require('./package.json').version")
+          srv=$(node -p "require('fs').readFileSync('src/server.ts','utf8').match(/SERVER_VERSION = '([^']+)'/)[1]")
+          echo "tag=$tag package.json=$pkg SERVER_VERSION=$srv"
+          test "$tag" = "$pkg" && test "$tag" = "$srv"
+      - run: npm ci
+      - run: npm run check
+      - name: what the tarball contains
+        run: npm pack --dry-run
+      - name: publish
+        run: npm publish --access public ${{ github.event_name == 'workflow_dispatch' && '--dry-run' || '' }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  mcp-registry:
+    needs: npm
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: server.json carries the released version
+        run: |
+          pkg=$(node -p "require('./package.json').version")
+          node -e "const s=require('./server.json'); if (s.version!=='$pkg'||s.packages[0].version!=='$pkg') { console.error('server.json version', s.version, '!=', '$pkg'); process.exit(1) }"
+      - name: install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher --help | head -3
+      - run: ./mcp-publisher validate
+      - run: ./mcp-publisher login github-oidc
+      - name: publish (retried while npm propagates the new version)
+        run: |
+          for i in 1 2 3 4 5 6; do
+            ./mcp-publisher publish && exit 0
+            echo "attempt $i failed; waiting 30s for npm to serve the new version"
+            sleep 30
+          done
+          exit 1
