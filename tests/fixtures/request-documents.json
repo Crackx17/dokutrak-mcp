@@ -1,0 +1,29 @@
+[
+  {
+    "id": "d1d1d1d1-0000-4000-8000-000000000001",
+    "name": "cni-recto-verso.pdf",
+    "url": "s3://docutrack-prod/org/req/cni.pdf",
+    "size": 245120,
+    "type": "application/pdf",
+    "validationStatus": "approved",
+    "rejectionReason": null
+  },
+  {
+    "id": "d2d2d2d2-0000-4000-8000-000000000002",
+    "name": "releve-aout.pdf",
+    "url": "s3://docutrack-prod/org/req/releve.pdf",
+    "size": 98304,
+    "type": "application/pdf",
+    "validationStatus": "rejected",
+    "rejectionReason": "Only one month; we need the last three."
+  },
+  {
+    "id": "d3d3d3d3-0000-4000-8000-000000000003",
+    "name": "avis-2025.pdf",
+    "url": "s3://docutrack-prod/org/req/avis.pdf",
+    "size": 51200,
+    "type": "application/pdf",
+    "validationStatus": "pending",
+    "rejectionReason": null
+  }
+]

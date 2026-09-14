@@ -1,0 +1,29 @@
+{
+  "id": "3f9c1d2e-7b7a-4c1e-9a0b-1c2d3e4f5a6b",
+  "organizationId": "0b0b0b0b-0b0b-4b0b-8b0b-0b0b0b0b0b0b",
+  "createdByUserId": "u1",
+  "recipientEmail": "marie.dupont@example.com",
+  "recipientName": "Marie Dupont",
+  "title": "Dossier Dupont — prêt immobilier",
+  "message": "Merci de nous transmettre les pièces ci-dessous.",
+  "deadline": "2026-09-30",
+  "status": "in_progress",
+  "createdAt": "2026-09-01T09:00:00.000Z",
+  "updatedAt": "2026-09-13T16:20:00.000Z",
+  "reminderEnabled": true,
+  "reminderCount": 2,
+  "lastReminderAt": "2026-09-12T08:00:00.000Z",
+  "nextReminderAt": "2026-09-16T08:00:00.000Z",
+  "reminderPausedUntil": null,
+  "reminderPauseReason": null,
+  "documents": [],
+  "documentRequirements": [
+    { "title": "Pièce d'identité", "doc_type": "id_card", "required": true },
+    { "title": "Relevés bancaires", "doc_type": "bank_statement", "description": "3 derniers mois", "required": true, "coverage_days": 90 },
+    { "title": "Avis d'imposition", "required": false }
+  ],
+  "linkOpenedAt": "2026-09-02T10:15:00.000Z",
+  "hasMagicLink": true,
+  "metadata": {},
+  "coverage": []
+}
