@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import detail from './fixtures/request-detail.json';
-import documents from './fixtures/request-documents.json';
-import list from './fixtures/request-list.json';
+import detail from './fixtures/request-detail.json' with { type: 'json' };
+import documents from './fixtures/request-documents.json' with { type: 'json' };
+import list from './fixtures/request-list.json' with { type: 'json' };
 import { API_KEY, connect, envelope, jsonOf, problem, textOf } from './harness.js';
 
 const ID = detail.id;
