@@ -45,6 +45,7 @@ if (!existsSync(CLI)) die(`${CLI} does not exist. Run \`npm run build\` first: t
 if (!stdin.isTTY) die('This run needs a terminal: it pauses twice for acts only a signed-in Professional can perform.');
 
 const steps = [];
+let lastResult;
 const rl = createInterface({ input: stdin, output: stdout });
 
 log(`dokutrak-mcp staging run — ${startedAt.toISOString()}`);
@@ -111,15 +112,24 @@ try {
   await confirm('Done?');
 
   // 2. Know, before the chase: the rejection must be visible to the agent.
+  // Looked up again as long as it is not, so a click made too early costs a
+  // retry, not a second Document Request.
   await step('get_request (by id, before the chase)', { request_id: requestId }, async (args) => {
-    const result = await callTool('get_request', args);
-    expectOk(result);
-    const body = json(result);
-    const rejected = body.documents.filter((d) => d.verdict === 'rejected');
-    expectTruthy(rejected.length >= 1, 'at least one rejected document');
-    expectTruthy(!JSON.stringify(body).includes('/upload/'), 'no upload link relayed');
-    expectTruthy(!('url' in (body.documents[0] ?? {})), 'no storage locator relayed');
-    return result;
+    for (;;) {
+      const result = await callTool('get_request', args);
+      expectOk(result);
+      const body = json(result);
+      const docs = body.documents ?? [];
+      const rejected = docs.filter((d) => d.verdict === 'rejected');
+      if (rejected.length >= 1) {
+        expectTruthy(!JSON.stringify(body).includes('/upload/'), 'no upload link relayed');
+        expectTruthy(!('url' in (docs[0] ?? {})), 'no storage locator relayed');
+        return result;
+      }
+      log(`  the agent sees status "${body.request?.status}" and ${docs.length} document(s)${docs.length ? ': ' + docs.map((d) => `${d.name} → ${d.verdict}`).join(', ') : ''} — none rejected yet.`);
+      log(docs.length ? '  Reject it in the dashboard (Requests → open the request → the file → Reject).' : '  Upload a file through the Secure Upload Link first, then reject it in the dashboard.');
+      await confirm('Look again?');
+    }
   });
 
   // 3. Chase.
@@ -186,6 +196,7 @@ try {
 
 async function step(name, args, body) {
   const t0 = Date.now();
+  lastResult = undefined;
   log('');
   log(`▶ ${name}`);
   try {
@@ -194,13 +205,14 @@ async function step(name, args, body) {
     log(`  ok (${Date.now() - t0} ms)`);
     return result;
   } catch (error) {
-    steps.push({ name, args, ok: false, ms: Date.now() - t0, error: error instanceof Error ? error.message : String(error) });
+    steps.push({ name, args, ok: false, ms: Date.now() - t0, error: error instanceof Error ? error.message : String(error), result: lastResult });
     throw error;
   }
 }
 
 async function callTool(name, args) {
-  return client.callTool({ name, arguments: args });
+  lastResult = await client.callTool({ name, arguments: args });
+  return lastResult;
 }
 
 function text(result) {
