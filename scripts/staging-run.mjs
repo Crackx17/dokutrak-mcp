@@ -36,6 +36,8 @@ const CLI = new URL('../dist/cli.js', import.meta.url).pathname;
 const apiKey = process.env.DOKUTRAK_API_KEY?.trim();
 const baseUrl = (process.env.DOKUTRAK_API_URL?.trim() || 'https://app.dokutrak.com/api').replace(/\/+$/, '');
 const recipient = process.env.STAGING_RECIPIENT_EMAIL?.trim();
+/** The app that fronts the API: `https://app.dokutrak.com/api` → `https://app.dokutrak.com`. */
+const appUrl = baseUrl.replace(/\/api$/, '');
 const startedAt = new Date();
 const reportPath = process.env.STAGING_REPORT?.trim() || `staging-run-${startedAt.toISOString().replace(/[:.]/g, '-').slice(0, 16)}.md`;
 
@@ -107,7 +109,7 @@ try {
   log('');
   log('── Human act 1 ─────────────────────────────────────────────────────────');
   log(`1. Open the email received at ${recipient} and upload one file through its Secure Upload Link.`);
-  log(`2. In the DokuTrak dashboard, open "${title}" and REJECT that file, with any reason.`);
+  log(`2. Open ${appUrl}/app/requests/${requestId} — the request's page in DokuTrak — and REJECT that file, with any reason.`);
   log('   (Rejecting is the Professional’s decision; no tool here can take it — that is the point.)');
   await confirm('Done?');
 
@@ -127,7 +129,7 @@ try {
         return result;
       }
       log(`  the agent sees status "${body.request?.status}" and ${docs.length} document(s)${docs.length ? ': ' + docs.map((d) => `${d.name} → ${d.verdict}`).join(', ') : ''} — none rejected yet.`);
-      log(docs.length ? '  Reject it in the dashboard (Requests → open the request → the file → Reject).' : '  Upload a file through the Secure Upload Link first, then reject it in the dashboard.');
+      log(docs.length ? `  Reject it: ${appUrl}/app/requests/${requestId} → the file → Reject.` : '  Upload a file through the Secure Upload Link first, then reject it on the request\'s page.');
       await confirm('Look again?');
     }
   });
