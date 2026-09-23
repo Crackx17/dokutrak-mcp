@@ -1,7 +1,7 @@
 {
   "name": "dokutrak-mcp",
   "mcpName": "io.github.Crackx17/dokutrak-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP connector for DokuTrak: let your agent chase the documents.",
   "license": "MIT",
   "type": "module",

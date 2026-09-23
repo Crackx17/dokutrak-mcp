@@ -115,11 +115,19 @@ and to nobody else; the client uploads through the secure link it contains. Unde
 is the same two-step the DokuTrak app performs: create with `sendEmail: false`, then send. If the
 send fails, the error names the created request, which stays visible in the dashboard.
 
+**Nothing goes out without your yes.** The email to a real client cannot be recalled, so the tool
+tells the agent to show you the recipient, the deadline, the checklist and the message, and to
+wait for your confirmation. The tool is also flagged so that the client asks you before every
+call: Claude Code prompts each time, even in auto or bypass mode, and Claude Desktop treats it as
+a tool that always needs approval. A client that ignores these flags is left with the
+instruction to the agent alone.
+
 ### `request_replacement`
 
 Chases the client on the rejected files of a request: flags them, moves the request back to
 awaiting the client, and returns it to the automatic reminder cadence. **This call sends no
-email by itself**; the reminders do. The optional message is recorded in the request's audit
+email by itself**; the reminders do, and DokuTrak has no way to email the client immediately,
+not even from the dashboard. The optional message is recorded in the request's audit
 trail and is not sent to the client. It refuses a request with no rejected file.
 
 ### `get_request`

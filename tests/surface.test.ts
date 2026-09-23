@@ -63,6 +63,51 @@ describe('tool surface', () => {
   });
 });
 
+describe('confirmation before an email leaves (dokutrak-product#577)', () => {
+  it('makes the client ask the Professional before every create_request call', async () => {
+    const t = await connect([]);
+    close = t.close;
+
+    const { tools } = await t.client.listTools();
+    const createRequest = tools.find((tool) => tool.name === 'create_request');
+    // Claude Code prompts on every call for this key, even in auto or bypass mode;
+    // Claude Desktop always prompts for a destructive tool.
+    expect(createRequest?._meta).toMatchObject({ 'anthropic/requiresUserInteraction': true });
+    expect(createRequest?.annotations).toMatchObject({ destructiveHint: true, openWorldHint: true });
+  });
+
+  it('tells the agent to recap the four elements and wait for the Professional to confirm', async () => {
+    const t = await connect([]);
+    close = t.close;
+
+    const { tools } = await t.client.listTools();
+    const description = tools.find((tool) => tool.name === 'create_request')?.description ?? '';
+    expect(description).toMatch(/cannot be recalled/);
+    expect(description).toMatch(/recipient email, the deadline, each document .* and the message/);
+    expect(description).toMatch(/only once they have confirmed/);
+  });
+
+  it('keeps every other tool free of the per-call prompt', async () => {
+    const t = await connect([]);
+    close = t.close;
+
+    const { tools } = await t.client.listTools();
+    for (const tool of tools.filter((tool) => tool.name !== 'create_request')) {
+      expect(tool._meta?.['anthropic/requiresUserInteraction'], tool.name).toBeUndefined();
+      expect(tool.annotations?.destructiveHint, tool.name).toBe(false);
+    }
+  });
+
+  it('tells the agent that no immediate email to the Client exists, dashboard included', async () => {
+    const t = await connect([]);
+    close = t.close;
+
+    const { tools } = await t.client.listTools();
+    const description = tools.find((tool) => tool.name === 'request_replacement')?.description ?? '';
+    expect(description).toMatch(/no way to email the Client immediately, not even from the dashboard/);
+  });
+});
+
 describe('configuration', () => {
   const src = sourceFiles(join(process.cwd(), 'src'));
 

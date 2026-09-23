@@ -4,8 +4,8 @@ import { describe, errorResult, jsonResult, runTool } from '../result.js';
 import type { RequestDetail, ToolRegistrar } from './types.js';
 
 export const CREATE_REQUEST_DESCRIPTION =
-  'Call this when the Professional wants to ask a Client for documents: it creates the Document Request and sends the email in one step, so nothing is left created but unsent. ' +
-  'Provide the Client email, a deadline, and the list of documents wanted, plus an optional title and a message written by the Professional. ' +
+  'Call this when the Professional wants to ask a Client for documents: it creates the Document Request and emails the Client in one step, and that email cannot be recalled. ' +
+  'Before calling, show the Professional the recipient email, the deadline, each document as the Client will read it, and the message if there is one, then call only once they have confirmed, even when the request already looks complete. ' +
   'The email goes to the recipient given here and to nobody else, and the Client uploads through the secure link it contains. ' +
   'If the email fails after creation, the error names the created request so it can be sent from the dashboard.';
 
@@ -42,7 +42,13 @@ export const registerCreateRequest: ToolRegistrar = (server, api) => {
           .min(1)
           .describe('The checklist the Client must fill.'),
       },
-      annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false },
+      // An email to a real Client cannot be recalled, so the client asks the
+      // Professional on every call rather than trusting the description alone
+      // (dokutrak-product#577, ADR-014 amendment of 2026-09-23). Claude Desktop
+      // always prompts for a destructive tool; Claude Code prompts on every call
+      // for this key, auto and bypass modes included.
+      annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true },
+      _meta: { 'anthropic/requiresUserInteraction': true },
     },
     (input) =>
       runTool(async () => {
