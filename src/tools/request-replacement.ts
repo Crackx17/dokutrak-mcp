@@ -5,7 +5,7 @@ import type { RequestDetail, ToolRegistrar } from './types.js';
 export const REQUEST_REPLACEMENT_DESCRIPTION =
   'Call this when a Document Request has rejected files and the Professional wants the Client to send them again. ' +
   'It flags every rejected file, moves the request back to awaiting the Client, and returns it to the automatic reminder cadence, which is what reaches the Client. ' +
-  'Nothing is emailed by this call itself, and the optional message is kept in the audit trail rather than sent. ' +
+  'Nothing is emailed by this call and there is no way to email the Client immediately, not even from the dashboard; the optional message is kept in the audit trail rather than sent. ' +
   'Do not use it on a request with no rejected file; get_request shows which files were rejected.';
 
 /**

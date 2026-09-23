@@ -6,6 +6,23 @@ All notable changes to `dokutrak-mcp` are recorded here. The format follows
 is part of the public contract: it changes only with a decision recorded in
 the DokuTrak product repository, and every such change is listed here.
 
+## [0.1.1] — 2026-09-23
+
+Decision recorded in the DokuTrak product repository: ADR-014, amendment of
+2026-09-23 (dokutrak-product#577).
+
+### Changed
+
+- `create_request` asks before it sends. Its description tells the agent to
+  show the Professional the recipient email, the deadline, each document and
+  the message, and to call only once they have confirmed. The tool is now
+  annotated `destructiveHint: true` and `openWorldHint: true`, and carries
+  `_meta["anthropic/requiresUserInteraction"]: true`, so Claude Desktop and
+  Claude Code ask the Professional before every call.
+- `request_replacement` says that no immediate email to the Client exists,
+  not even from the dashboard. An agent had told a Professional otherwise.
+- The install skill asks for the message as well, and asks every time.
+
 ## [0.1.0] — 2026-09-14
 
 First public release. One complete round trip — ask, chase, know, collect —
@@ -38,4 +55,5 @@ as decided in ADR-014 of the DokuTrak product repository.
   management: the service refuses them to every Agent Connection, whatever
   the connector.
 
+[0.1.1]: https://github.com/Crackx17/dokutrak-mcp/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Crackx17/dokutrak-mcp/releases/tag/v0.1.0

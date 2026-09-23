@@ -28,8 +28,9 @@ Done when `get_request` with any `search` returns a result or "no match" — not
 ## Ask
 
 A real email leaves the service on `create_request`, to the address given and nobody else.
-Before calling, have the Professional confirm three things in one message: the Client's
-email, the deadline, and the checklist (one line per document, as the Client will read it).
+Before calling, have the Professional confirm four things in one message: the Client's
+email, the deadline, the checklist (one line per document, as the Client will read it), and
+the message if there is one. Ask every time, even when the request already looks complete.
 Done when the result says `sent: true`; give the Professional the request id and the deadline.
 If the result says the request was created but not sent, say so: it is in the dashboard,
 where it can be sent.
