@@ -6,6 +6,17 @@ All notable changes to `dokutrak-mcp` are recorded here. The format follows
 is part of the public contract: it changes only with a decision recorded in
 the DokuTrak product repository, and every such change is listed here.
 
+## [Unreleased]
+
+### Added
+
+- An MCP Bundle, `dokutrak.mcpb`: one-click install in Claude Desktop, the
+  Agent Connection asked for at install and stored as a sensitive setting.
+  `npm run bundle` builds it (`mcpb/manifest.json`, dependencies inlined in
+  one file), checks it against the running server and packs it; the release
+  workflow attaches it to each GitHub release. The npm package is unchanged.
+- A Privacy Policy section in the README.
+
 ## [0.1.1] — 2026-09-23
 
 Decision recorded in the DokuTrak product repository: ADR-014, amendment of

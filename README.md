@@ -22,7 +22,19 @@ configuration with your key already in place; the instructions below are the sam
 The key is read from the environment variable `DOKUTRAK_API_KEY`. It is never taken from the
 command line.
 
-### Claude Desktop
+### Install in Claude Desktop (one click)
+
+1. Download [`dokutrak.mcpb`](https://github.com/Crackx17/dokutrak-mcp/releases/latest/download/dokutrak.mcpb),
+   the connector packaged as an [MCP Bundle](https://github.com/modelcontextprotocol/mcpb).
+2. Double-click it, or drag it onto Claude Desktop (**Settings → Extensions**).
+3. Click **Install** and paste your Agent Connection key when asked. Claude Desktop masks it, stores it
+   securely and passes it to the connector as `DOKUTRAK_API_KEY`.
+
+The bundle carries its own copy of the connector and runs on the Node.js built into Claude
+Desktop: no `npx`, no configuration file to edit. `npm run bundle` builds the same file from a
+clone.
+
+### Claude Desktop, by hand
 
 Open the configuration file:
 
@@ -155,6 +167,19 @@ connector asks. The same goes for billing, workspace settings and the management
 Revoking the Agent Connection in DokuTrak takes effect on the very next call: the connector
 answers with the service's 401 and nothing else.
 
+## Privacy Policy
+
+The connector runs on your machine and talks to one service only: the DokuTrak API
+(`https://app.dokutrak.com/api`, or the URL you set in `DOKUTRAK_API_URL`), with the Agent
+Connection you configured. It sends what the tools need (the request you create, the id or
+search term you look up) and relays the answers to your agent. It writes nothing to disk, keeps
+no cache or log, and sends no telemetry or analytics to DokuTrak or to anyone else.
+
+Everything it sends is processed by DokuTrak under the [DokuTrak Privacy
+Policy](https://dokutrak.com/privacy), which covers what is collected, how it is used and
+stored, the subprocessors it is shared with, retention and deletion, and your rights. Questions:
+arthur@dokutrak.com; security issues: security@dokutrak.com.
+
 ## Development
 
 ```bash
@@ -182,6 +207,15 @@ DOKUTRAK_API_KEY=dk_live_… STAGING_RECIPIENT_EMAIL=you@example.com npm run sta
 
 A real Document Request is created and a real email goes to `STAGING_RECIPIENT_EMAIL`. The
 transcript lands in `staging-run-<timestamp>.md` (git-ignored); the key is never written to it.
+
+### The MCP Bundle
+
+`npm run bundle` builds `mcpb/server/index.cjs` (the connector with every dependency inlined),
+starts it and checks that it lists exactly the tools declared in `mcpb/manifest.json` at the
+version of `package.json`, then validates the manifest and packs `dokutrak.mcpb` with the
+official [`mcpb`](https://github.com/modelcontextprotocol/mcpb) CLI. CI runs it on every pull
+request, and the release workflow attaches `dokutrak.mcpb` to the GitHub release of each tag.
+A change to the tool surface or the version updates `mcpb/manifest.json` too.
 
 ### Releasing
 

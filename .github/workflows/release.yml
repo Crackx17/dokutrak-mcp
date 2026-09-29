@@ -16,6 +16,11 @@
 #
 # The MCP Registry job needs the npm package to be visible with its `mcpName`,
 # hence the retry. It is not a required check anywhere and runs on no PR.
+#
+# The mcpb job attaches the MCP Bundle (`dokutrak.mcpb`, one-click install in
+# Claude Desktop) to the GitHub release of the tag, creating the release if
+# needed. It runs after npm and changes nothing about npm publishing; on
+# `workflow_dispatch` it only builds the bundle and keeps it as an artifact.
 name: release
 
 on:
@@ -81,3 +86,35 @@ jobs:
             sleep 30
           done
           exit 1
+
+  mcpb:
+    needs: npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: build, check and pack the MCP Bundle
+        run: npm run bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dokutrak.mcpb
+          path: dokutrak.mcpb
+          if-no-files-found: error
+      - name: attach it to the GitHub release of the tag
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dokutrak.mcpb --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dokutrak.mcpb --verify-tag \
+              --title "$GITHUB_REF_NAME" \
+              --notes "See [CHANGELOG.md](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_REF_NAME}/CHANGELOG.md). \`dokutrak.mcpb\` installs the connector in Claude Desktop in one click."
+          fi

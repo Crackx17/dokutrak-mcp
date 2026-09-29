@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/mcpb/main/schemas/mcpb-manifest-v0.3.schema.json",
+  "manifest_version": "0.3",
+  "name": "dokutrak-mcp",
+  "display_name": "DokuTrak",
+  "version": "0.1.1",
+  "description": "Let your agent chase the documents: create, chase, read and collect DokuTrak Document Requests.",
+  "long_description": "DokuTrak collects documents from your clients on your behalf: you send a request, the client uploads through a secure link, the files are reviewed, and silent clients get reminded. This extension puts that loop inside Claude, so \"where does the Dupont file stand?\" is answered without leaving the conversation.\n\nFour tools, one round trip: ask (`create_request`), chase (`request_replacement`), know (`get_request`), collect (`download_documents`).\n\n- **Nothing goes out without your yes.** `create_request` emails a real client, so Claude shows you the recipient, deadline, checklist and message first, and Claude Desktop asks for your approval before every call.\n- **Approving or rejecting a document stays with you**, in the DokuTrak dashboard. No tool here can do it.\n- The extension is a thin, stateless client of the DokuTrak API: it holds your Agent Connection, stores nothing on disk and keeps no cache. Revoking the Agent Connection in DokuTrak takes effect on the next call.\n\nYou need a DokuTrak workspace and an Agent Connection, issued from Settings → Connect an agent in the DokuTrak app.",
+  "author": {
+    "name": "Arthur Teboul",
+    "url": "https://dokutrak.com"
+  },
+  "homepage": "https://dokutrak.com",
+  "documentation": "https://github.com/Crackx17/dokutrak-mcp#readme",
+  "support": "https://github.com/Crackx17/dokutrak-mcp/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Crackx17/dokutrak-mcp"
+  },
+  "icon": "icon.png",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.cjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.cjs"],
+      "env": {
+        "DOKUTRAK_API_KEY": "${user_config.api_key}",
+        "DOKUTRAK_API_URL": "${user_config.api_url}"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "create_request",
+      "description": "Create a Document Request and email it to the client in one step. Claude shows you the recipient, deadline, checklist and message, and asks for your confirmation before every call."
+    },
+    {
+      "name": "request_replacement",
+      "description": "Chase the client on the rejected files of a request: flags them, moves the request back to awaiting the client and returns it to the automatic reminder cadence. Sends no email by itself."
+    },
+    {
+      "name": "get_request",
+      "description": "Where a Document Request stands: status, checklist, every collected file with its verdict, and the reminder state. By request id or by a search on the title, client name or client email."
+    },
+    {
+      "name": "download_documents",
+      "description": "Every collected file of a request as one zip archive, returned inside the tool result. Nothing is written to disk."
+    }
+  ],
+  "tools_generated": false,
+  "prompts_generated": false,
+  "keywords": ["dokutrak", "document collection", "document requests", "client documents", "reminders", "accounting", "mcp"],
+  "license": "MIT",
+  "privacy_policies": ["https://dokutrak.com/privacy"],
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=20.0.0"
+    }
+  },
+  "user_config": {
+    "api_key": {
+      "type": "string",
+      "title": "Agent Connection key",
+      "description": "Your DokuTrak Agent Connection, issued from Settings → Connect an agent in the DokuTrak app (starts with dk_live_).",
+      "sensitive": true,
+      "required": true
+    },
+    "api_url": {
+      "type": "string",
+      "title": "DokuTrak API URL",
+      "description": "Base URL of the DokuTrak API, ending in /api. Leave the default unless DokuTrak told you otherwise.",
+      "default": "https://app.dokutrak.com/api",
+      "required": false
+    }
+  }
+}
