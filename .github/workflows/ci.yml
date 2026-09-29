@@ -25,3 +25,10 @@ jobs:
           echo "$out"
           test "$code" -eq 1
           echo "$out" | grep -q DOKUTRAK_API_KEY
+      - name: the MCP Bundle builds, lists the manifest's tools, validates and packs
+        run: npm run bundle
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dokutrak.mcpb
+          path: dokutrak.mcpb
+          if-no-files-found: error
