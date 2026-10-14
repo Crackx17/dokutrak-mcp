@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "dokutrak",
+  "displayName": "DokuTrak",
+  "version": "0.2.0",
+  "description": "Chase client documents from your agent: the hosted DokuTrak connector plus a tax-season workflow that builds each client's checklist, batches the requests for your confirmation, and tells you who is still missing what.",
+  "author": {
+    "name": "DokuTrak",
+    "url": "https://dokutrak.com"
+  },
+  "homepage": "https://dokutrak.com/connectors",
+  "repository": "https://github.com/Crackx17/dokutrak-mcp",
+  "license": "MIT",
+  "keywords": [
+    "tax",
+    "accounting",
+    "document-collection",
+    "tax-preparer",
+    "mcp"
+  ],
+  "icon": "./mcpb/icon.png",
+  "documentationUrl": "https://dokutrak.com/connectors",
+  "supportUrl": "https://dokutrak.com/contact",
+  "privacyPolicyUrl": "https://dokutrak.com/privacy",
+  "termsOfServiceUrl": "https://dokutrak.com/terms",
+  "mcpServers": {
+    "dokutrak": {
+      "type": "http",
+      "url": "https://app.dokutrak.com/api/mcp"
+    }
+  }
+}

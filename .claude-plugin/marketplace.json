@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "dokutrak",
+  "description": "DokuTrak plugins: collect and chase client documents from your agent.",
+  "owner": { "name": "DokuTrak", "url": "https://dokutrak.com" },
+  "plugins": [
+    {
+      "name": "dokutrak",
+      "source": "./",
+      "description": "Hosted DokuTrak connector plus the tax-season document chase workflow.",
+      "category": "productivity",
+      "tags": ["tax", "accounting", "documents"]
+    }
+  ]
+}

@@ -65,6 +65,18 @@ claude mcp add dokutrak -e DOKUTRAK_API_KEY=dk_live_… -- npx -y dokutrak-mcp
 
 Then `/mcp` inside Claude Code lists `dokutrak` and its tools.
 
+### Claude Code plugin: tax-season document chase
+
+```
+/plugin install dokutrak --marketplace Crackx17/dokutrak-mcp
+```
+
+The plugin adds the hosted connector (you sign in to DokuTrak on first use) and the
+`tax-season-document-chase` skill: give Claude your client list, it builds each client's
+checklist by return type (W-2, 1099, Schedule C, rental, K-1, retiree…), shows you the whole
+batch to confirm, prepares one request per client for you to confirm in DokuTrak, sends them,
+and later reports who is still missing what. Nothing goes out without your confirmation.
+
 ### claude.ai and ChatGPT (hosted)
 
 Add `https://app.dokutrak.com/api/mcp` as a custom connector. You sign in to DokuTrak
