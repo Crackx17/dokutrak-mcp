@@ -3,7 +3,7 @@
   "manifest_version": "0.3",
   "name": "dokutrak-mcp",
   "display_name": "DokuTrak",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Let your agent chase the documents: create, chase, read and collect DokuTrak Document Requests.",
   "long_description": "DokuTrak collects documents from your clients on your behalf: you send a request, the client uploads through a secure link, the files are reviewed, and silent clients get reminded. This extension puts that loop inside Claude, so \"where does the Dupont file stand?\" is answered without leaving the conversation.\n\nFour tools, one round trip: ask (`create_request`), chase (`request_replacement`), know (`get_request`), collect (`download_documents`).\n\n- **Nothing goes out without your yes.** `create_request` emails a real client, so Claude shows you the recipient, deadline, checklist and message first, and Claude Desktop asks for your approval before every call.\n- **Approving or rejecting a document stays with you**, in the DokuTrak dashboard. No tool here can do it.\n- The extension is a thin, stateless client of the DokuTrak API: it holds your Agent Connection, stores nothing on disk and keeps no cache. Revoking the Agent Connection in DokuTrak takes effect on the next call.\n\nYou need a DokuTrak workspace and an Agent Connection, issued from Settings → Connect an agent in the DokuTrak app.",
   "author": {

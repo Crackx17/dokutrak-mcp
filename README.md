@@ -65,11 +65,13 @@ claude mcp add dokutrak -e DOKUTRAK_API_KEY=dk_live_… -- npx -y dokutrak-mcp
 
 Then `/mcp` inside Claude Code lists `dokutrak` and its tools.
 
-### claude.ai
+### claude.ai and ChatGPT (hosted)
 
-**Not supported in this release.** claude.ai connects to remote MCP servers over HTTP with
-OAuth; this connector speaks stdio with an API key, which is what a local install into Claude
-Desktop or Claude Code needs. A hosted variant is a separate, later decision.
+Add `https://app.dokutrak.com/api/mcp` as a custom connector. You sign in to DokuTrak
+(or create an account) during the OAuth step. The hosted connector prepares a request,
+sends it only after you confirm it in DokuTrak, and tracks progress. It never returns
+file content. Downloading files stays with this local connector. Setup:
+[dokutrak.com/connectors](https://dokutrak.com/connectors).
 
 ### From a clone, before the npm release
 

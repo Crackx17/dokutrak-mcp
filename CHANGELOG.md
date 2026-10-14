@@ -8,8 +8,14 @@ the DokuTrak product repository, and every such change is listed here.
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-10-14
+
 ### Added
 
+- The hosted connector, `https://app.dokutrak.com/api/mcp`, listed as a
+  remote in the MCP Registry entry next to the npm package. It is operated by
+  the DokuTrak service (OAuth, prepare / confirm / send / track) and is not
+  part of this package; see the README.
 - An MCP Bundle, `dokutrak.mcpb`: one-click install in Claude Desktop, the
   Agent Connection asked for at install and stored as a sensitive setting.
   `npm run bundle` builds it (`mcpb/manifest.json`, dependencies inlined in
@@ -66,5 +72,6 @@ as decided in ADR-014 of the DokuTrak product repository.
   management: the service refuses them to every Agent Connection, whatever
   the connector.
 
+[0.1.2]: https://github.com/Crackx17/dokutrak-mcp/releases/tag/v0.1.2
 [0.1.1]: https://github.com/Crackx17/dokutrak-mcp/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Crackx17/dokutrak-mcp/releases/tag/v0.1.0

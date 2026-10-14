@@ -8,13 +8,13 @@
     "source": "github"
   },
   "websiteUrl": "https://dokutrak.com",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "packages": [
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "dokutrak-mcp",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"
@@ -35,6 +35,12 @@
           "format": "string"
         }
       ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://app.dokutrak.com/api/mcp"
     }
   ]
 }
