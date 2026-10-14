@@ -22,7 +22,10 @@ Done when `get_request` with any `search` returns a result or "no match" — not
    - Claude Desktop: merge it into `claude_desktop_config.json`
      (macOS `~/Library/Application Support/Claude/`, Windows `%APPDATA%\Claude\`), restart.
    - Claude Code: `claude mcp add dokutrak -e DOKUTRAK_API_KEY=<key> -- npx -y dokutrak-mcp`.
-   - claude.ai is not supported: it needs a remote server, and this one runs locally over stdio.
+   - claude.ai and ChatGPT use the hosted connector instead (`https://app.dokutrak.com/api/mcp`,
+     sign-in through DokuTrak, no key): see https://dokutrak.com/connectors. Its tools are
+     `prepare_request`, `review_request`, `send_request`, `get_request`; the workflow in the
+     `tax-season-document-chase` skill covers both.
 3. Call `get_request` with a `search`. A 401 means the key is wrong or revoked: back to step 1.
 
 ## Ask

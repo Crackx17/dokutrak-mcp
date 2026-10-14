@@ -8,6 +8,13 @@ the DokuTrak product repository, and every such change is listed here.
 
 ## [Unreleased]
 
+### Added
+
+- A Claude Code plugin and marketplace (`.claude-plugin/`): the hosted connector plus the
+  `tax-season-document-chase` skill, which turns a client list into one confirmed request
+  per client and reports who is still missing what. Install with
+  `/plugin install dokutrak --marketplace Crackx17/dokutrak-mcp`. No change to the tool surface.
+
 ## [0.1.2] — 2026-10-14
 
 ### Added
